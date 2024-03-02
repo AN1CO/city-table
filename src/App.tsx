@@ -1,21 +1,22 @@
-import { useEffect, useCallback, useState, useMemo } from 'react';
-import type { ChangeEvent } from 'react';
-import type { City } from 'api/getCities';
-import { getCities } from 'api/getCities';
-import './App.css';
+import { useEffect, useCallback, useState, useMemo } from "react";
+import type { ChangeEvent } from "react";
+import type { City } from "api/getCities";
+import { getCities } from "api/getCities";
+import { Table } from "./components";
+import "./App.css";
 
 const App = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [cities, setCities] = useState<City[]>([]);
   const [error, setError] = useState<Error>();
 
-  const cityRows = useMemo(() =>
-    cities.map(s => <pre key={s.id}>{JSON.stringify(s)}</pre>),
-  [cities]);
+  const cityRows = useMemo(
+    () => cities.map((s) => <pre key={s.id}>{JSON.stringify(s)}</pre>),
+    [cities]
+  );
 
   const runSearch = useCallback(async (term: string) => {
-    try
-    {
+    try {
       const searchResult = await getCities({ searchTerm: term });
       setCities(searchResult);
     } catch (err: any) {
@@ -38,11 +39,17 @@ const App = () => {
       <h1>City List</h1>
       <form>
         <label htmlFor="search">Search</label>
-        <input id="search" name="search" type="text" onChange={() => onSearchTermChange}/>
+        <input
+          id="search"
+          name="search"
+          type="text"
+          onChange={() => onSearchTermChange}
+        />
       </form>
+      <Table cities={cities} />
       {error ? <pre>{`Eek! ${error.message}`}</pre> : cityRows}
     </div>
   );
- };
+};
 
 export default App;
