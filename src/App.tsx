@@ -3,17 +3,13 @@ import type { ChangeEvent } from "react";
 import type { City } from "api/getCities";
 import { getCities } from "api/getCities";
 import { Table } from "./components";
+import { Box, Typography } from "@mui/material";
 import "./App.css";
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [cities, setCities] = useState<City[]>([]);
   const [error, setError] = useState<Error>();
-
-  const cityRows = useMemo(
-    () => cities.map((s) => <pre key={s.id}>{JSON.stringify(s)}</pre>),
-    [cities]
-  );
 
   const runSearch = useCallback(async (term: string) => {
     try {
@@ -34,9 +30,16 @@ const App = () => {
   };
 
   return (
-    <div className="App">
-      <header className="App-header"></header>
-      <h1>City List</h1>
+    <Box display="flex" flexDirection="column">
+      <Typography
+        gutterBottom
+        component="h1"
+        variant="h2"
+        align="center"
+        marginTop={1}
+      >
+        City List
+      </Typography>
       <form>
         <label htmlFor="search">Search</label>
         <input
@@ -47,8 +50,7 @@ const App = () => {
         />
       </form>
       <Table cities={cities} />
-      {error ? <pre>{`Eek! ${error.message}`}</pre> : cityRows}
-    </div>
+    </Box>
   );
 };
 

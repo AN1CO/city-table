@@ -36,7 +36,15 @@ export const Table = ({ cities }: TableProps) => {
     },
   ];
   return (
-    <Box sx={{ height: 700, width: 800, margin: 1, padding: 1 }}>
+    <Box
+      sx={{
+        height: 700,
+        width: 800,
+        margin: 1,
+        padding: 1,
+        alignSelf: "center",
+      }}
+    >
       <DataGrid
         aria-label="city table"
         columns={columns}
