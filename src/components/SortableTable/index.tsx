@@ -138,8 +138,12 @@ export const SortableTable = ({ cities, isLoading }: SortableTableProps) => {
         columns={columns}
         rows={rows}
         slots={{ toolbar: SearchBox, noRowsOverlay: NoRows }}
-        autoPageSize
-        pageSizeOptions={[10]}
+        initialState={{
+          pagination: {
+            paginationModel: { pageSize: 10 },
+          },
+        }}
+        pageSizeOptions={[10, 25, 50, 100]}
         sx={{
           border: "none",
           "& .MuiDataGrid-columnHeaders": {
