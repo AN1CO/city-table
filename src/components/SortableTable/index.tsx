@@ -3,7 +3,11 @@ import { Box, TextField, IconButton, Typography } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import ArrowDown from "../../assets/ArrowDown.svg";
 import ArrowUp from "../../assets/ArrowUp.svg";
-import SearchIcon from "../../assets/Search.svg";
+import Search from "../../assets/Search.svg";
+import LastPage from "../../assets/LastPage.svg";
+import FirstPage from "../../assets/FirstPage.svg";
+import ChevronLeft from "../../assets/ChevronLeft.svg";
+import ChevronRight from "../../assets/ChevronRight.svg";
 import SortIcon from "../../assets/Sort.svg";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { CustomIcon } from "../CustomIcon";
@@ -18,6 +22,16 @@ interface SearchBoxProps {
   clearSearch: () => void;
   onChange: () => void;
   value: string;
+}
+
+interface TablePaginationActionsProps {
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    newPage: number
+  ) => void;
 }
 
 const columns: GridColDef[] = [
@@ -59,6 +73,66 @@ const columns: GridColDef[] = [
   },
 ];
 
+const UnsortedIcon = () => {
+  return <CustomIcon alt="sort" icon={SortIcon} />;
+};
+
+const AscendingIcon = () => {
+  return <CustomIcon alt="ascending" icon={ArrowUp} />;
+};
+
+const DescendingIcon = () => {
+  return <CustomIcon alt="descending" icon={ArrowDown} />;
+};
+
+const TablePaginationActions = ({
+  count,
+  page,
+  rowsPerPage,
+  onPageChange,
+}: TablePaginationActionsProps) => {
+  return (
+    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+      <IconButton
+        onClick={(event) => {
+          onPageChange(event, page + 1);
+        }}
+        disabled={page === 0}
+        aria-label="first page"
+      >
+        <CustomIcon icon={FirstPage} />
+      </IconButton>
+      <IconButton
+        onClick={(event) => {
+          onPageChange(event, page - 1);
+        }}
+        disabled={page === 0}
+        aria-label="previous page"
+      >
+        <CustomIcon icon={ChevronLeft} />
+      </IconButton>
+      <IconButton
+        onClick={(event) => {
+          onPageChange(event, page + 1);
+        }}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="next page"
+      >
+        <CustomIcon icon={ChevronRight} />
+      </IconButton>
+      <IconButton
+        onClick={(event) => {
+          onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+        }}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="last page"
+      >
+        <CustomIcon icon={LastPage} />
+      </IconButton>
+    </Box>
+  );
+};
+
 const SearchBox = ({ clearSearch, onChange, value }: SearchBoxProps) => {
   return (
     <TextField
@@ -75,7 +149,7 @@ const SearchBox = ({ clearSearch, onChange, value }: SearchBoxProps) => {
         backgroundColor: "#f4f4f3",
       }}
       InputProps={{
-        startAdornment: <CustomIcon alt="search" icon={SearchIcon} />,
+        startAdornment: <CustomIcon alt="search" icon={Search} />,
         endAdornment: (
           <IconButton
             title="Clear"
@@ -101,10 +175,6 @@ const NoRows = () => {
       </Typography>
     </Box>
   );
-};
-
-const UnsortedIcon = () => {
-  return <CustomIcon alt="sort" icon={SortIcon} />;
 };
 
 export const SortableTable = ({ cities, isLoading }: SortableTableProps) => {
@@ -147,6 +217,8 @@ export const SortableTable = ({ cities, isLoading }: SortableTableProps) => {
           toolbar: SearchBox,
           noRowsOverlay: NoRows,
           columnUnsortedIcon: UnsortedIcon,
+          columnSortedAscendingIcon: AscendingIcon,
+          columnSortedDescendingIcon: DescendingIcon,
         }}
         initialState={{
           pagination: {
@@ -157,14 +229,23 @@ export const SortableTable = ({ cities, isLoading }: SortableTableProps) => {
         sx={{
           border: "none",
           "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: "#f4f4f3",
+            backgroundColor: "#fbfafa",
+          },
+
+          "& .MuiDataGrid-footerContainer": {
+            backgroundColor: "#fbfafa",
+            borderTop: "none",
           },
           // TODO: remove the hover on the header
-          "&.MuiDataGrid-root .MuiDataGrid-row:hover": {
+          "& .MuiDataGrid-root .MuiDataGrid-row:hover": {
             backgroundColor: "inherit",
           },
-          "&.MuiDataGrid-root .Mui-hovered": {
+          "& .MuiDataGrid-root .Mui-hovered": {
             backgroundColor: "inherit",
+          },
+
+          "& .MuiTablePagination-displayedRows": {
+            display: "none",
           },
         }}
         slotProps={{
@@ -173,6 +254,9 @@ export const SortableTable = ({ cities, isLoading }: SortableTableProps) => {
             onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
               handleSearch(event.target.value),
             clearSearch: () => handleSearch(""),
+          },
+          pagination: {
+            ActionsComponent: TablePaginationActions,
           },
         }}
       />
