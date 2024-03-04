@@ -7,6 +7,7 @@ import {
   GridColDef,
   GridToolbarDensitySelector,
   GridToolbarFilterButton,
+  GridNoRowsOverlay,
 } from "@mui/x-data-grid";
 import type { City } from "api/getCities";
 
@@ -53,7 +54,7 @@ const escapeRegExp = (value: string): string => {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 };
 
-function SearchBox({ clearSearch, onChange, value }: SearchBoxProps) {
+const SearchBox = ({ clearSearch, onChange, value }: SearchBoxProps) => {
   return (
     <div>
       <div>
@@ -82,13 +83,13 @@ function SearchBox({ clearSearch, onChange, value }: SearchBoxProps) {
       />
     </div>
   );
-}
+};
 
 export const SortableTable = ({ cities }: SortableTableProps) => {
   const [searchText, setSearchText] = useState("");
   const [rows, setRows] = useState<any[]>(cities);
 
-  const requestSearch = (searchValue: string) => {
+  const handleSearch = (searchValue: string) => {
     setSearchText(searchValue);
     const searchRegex = new RegExp(escapeRegExp(searchValue), "i");
     const filteredRows = cities.filter((row: any) => {
@@ -124,8 +125,8 @@ export const SortableTable = ({ cities }: SortableTableProps) => {
           toolbar: {
             value: searchText,
             onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
-              requestSearch(event.target.value),
-            clearSearch: () => requestSearch(""),
+              handleSearch(event.target.value),
+            clearSearch: () => handleSearch(""),
           },
         }}
       />
