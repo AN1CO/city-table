@@ -8,6 +8,7 @@ import "./App.css";
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
   const [error, setError] = useState<Error>();
 
@@ -15,6 +16,7 @@ const App = () => {
     try {
       const searchResult = await getCities({ searchTerm: term });
       setCities(searchResult);
+      setIsLoading(false);
     } catch (err: any) {
       setError(err);
     }
@@ -35,7 +37,7 @@ const App = () => {
       >
         City List
       </Typography>
-      <SortableTable cities={cities} />
+      <SortableTable cities={cities} isLoading={isLoading} />
     </Box>
   );
 };

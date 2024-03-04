@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, TextField, IconButton } from "@mui/material";
+import { Box, TextField, IconButton, Typography } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -7,6 +7,7 @@ import type { City } from "api/getCities";
 
 interface SortableTableProps {
   cities: City[];
+  isLoading: boolean;
 }
 
 interface SearchBoxProps {
@@ -16,7 +17,10 @@ interface SearchBoxProps {
 }
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "ID" },
+  {
+    field: "id",
+    headerName: "ID",
+  },
   {
     field: "name",
     headerName: "Name",
@@ -50,37 +54,54 @@ const escapeRegExp = (value: string): string => {
 
 const SearchBox = ({ clearSearch, onChange, value }: SearchBoxProps) => {
   return (
-    <>
-      <TextField
-        variant="standard"
-        value={value}
-        onChange={onChange}
-        placeholder="Search for a city"
-        sx={{
-          paddingTop: 1,
-          margin: 1,
-          backgroundColor: "#f4f4f3",
-        }}
-        InputProps={{
-          startAdornment: <SearchIcon fontSize="small" />,
-          endAdornment: (
-            <IconButton
-              title="Clear"
-              aria-label="Clear"
-              size="small"
-              style={{ visibility: value ? "visible" : "hidden" }}
-              onClick={clearSearch}
-            >
-              <ClearIcon fontSize="small" />
-            </IconButton>
-          ),
-        }}
-      />
-    </>
+    <TextField
+      variant="standard"
+      value={value}
+      onChange={onChange}
+      placeholder="Search for a city"
+      sx={{
+        paddingTop: 1,
+        marginX: 6,
+        marginY: 3,
+        alignSelf: "center",
+        width: "60%",
+        backgroundColor: "#f4f4f3",
+      }}
+      InputProps={{
+        startAdornment: (
+          <SearchIcon
+            fontSize="small"
+            sx={{ marginX: 0.5, marginBottom: 0.5 }}
+          />
+        ),
+        endAdornment: (
+          <IconButton
+            title="Clear"
+            aria-label="Clear"
+            size="small"
+            style={{ visibility: value ? "visible" : "hidden" }}
+            onClick={clearSearch}
+            sx={{ marginX: 0.5, marginBottom: 0.5 }}
+          >
+            <ClearIcon fontSize="small" />
+          </IconButton>
+        ),
+      }}
+    />
   );
 };
 
-export const SortableTable = ({ cities }: SortableTableProps) => {
+const NoRows = () => {
+  return (
+    <Box display="flex" justifyContent="center">
+      <Typography align="center" variant="h5" component="p" marginTop={5}>
+        No cities found
+      </Typography>
+    </Box>
+  );
+};
+
+export const SortableTable = ({ cities, isLoading }: SortableTableProps) => {
   const [searchText, setSearchText] = useState("");
   const [rows, setRows] = useState<any[]>(cities);
 
@@ -110,12 +131,21 @@ export const SortableTable = ({ cities }: SortableTableProps) => {
       }}
     >
       <DataGrid
+        disableRowSelectionOnClick
+        loading={isLoading}
+        onProcessRowUpdateError={(error) => error.message}
         aria-label="city table"
         columns={columns}
         rows={rows}
-        slots={{ toolbar: SearchBox }}
+        slots={{ toolbar: SearchBox, noRowsOverlay: NoRows }}
         autoPageSize
         pageSizeOptions={[10]}
+        sx={{
+          border: "none",
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: "#f4f4f3",
+          },
+        }}
         slotProps={{
           toolbar: {
             value: searchText,
