@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Box, TextField, IconButton, Typography } from "@mui/material";
+import { Box, TextField, IconButton, Typography, Icon } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
-import SearchIcon from "@mui/icons-material/Search";
+import SearchIcon from "../../assets/Search.svg";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import type { City } from "api/getCities";
 
@@ -69,10 +69,9 @@ const SearchBox = ({ clearSearch, onChange, value }: SearchBoxProps) => {
       }}
       InputProps={{
         startAdornment: (
-          <SearchIcon
-            fontSize="small"
-            sx={{ marginX: 0.5, marginBottom: 0.5 }}
-          />
+          <Icon sx={{ marginX: 0.5, marginBottom: 0.5 }}>
+            <img alt="search" src={SearchIcon} />
+          </Icon>
         ),
         endAdornment: (
           <IconButton
