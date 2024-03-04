@@ -2,13 +2,7 @@ import { useState, useEffect } from "react";
 import { Box, TextField, IconButton } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 import SearchIcon from "@mui/icons-material/Search";
-import {
-  DataGrid,
-  GridColDef,
-  GridToolbarDensitySelector,
-  GridToolbarFilterButton,
-  GridNoRowsOverlay,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import type { City } from "api/getCities";
 
 interface SortableTableProps {
@@ -56,16 +50,12 @@ const escapeRegExp = (value: string): string => {
 
 const SearchBox = ({ clearSearch, onChange, value }: SearchBoxProps) => {
   return (
-    <div>
-      <div>
-        <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
-      </div>
+    <>
       <TextField
         variant="standard"
         value={value}
         onChange={onChange}
-        placeholder="Search…"
+        placeholder="Search for a city"
         InputProps={{
           startAdornment: <SearchIcon fontSize="small" />,
           endAdornment: (
@@ -81,7 +71,7 @@ const SearchBox = ({ clearSearch, onChange, value }: SearchBoxProps) => {
           ),
         }}
       />
-    </div>
+    </>
   );
 };
 
