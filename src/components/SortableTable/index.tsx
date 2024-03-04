@@ -56,6 +56,11 @@ const SearchBox = ({ clearSearch, onChange, value }: SearchBoxProps) => {
         value={value}
         onChange={onChange}
         placeholder="Search for a city"
+        sx={{
+          paddingTop: 1,
+          margin: 1,
+          backgroundColor: "#f4f4f3",
+        }}
         InputProps={{
           startAdornment: <SearchIcon fontSize="small" />,
           endAdornment: (
