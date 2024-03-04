@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
-import { Box, TextField, IconButton, Typography, Icon } from "@mui/material";
+import { Box, TextField, IconButton, Typography } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+import ArrowDown from "../../assets/ArrowDown.svg";
+import ArrowUp from "../../assets/ArrowUp.svg";
 import SearchIcon from "../../assets/Search.svg";
+import SortIcon from "../../assets/Sort.svg";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { CustomIcon } from "../CustomIcon";
 import type { City } from "api/getCities";
 
 interface SortableTableProps {
@@ -20,37 +24,40 @@ const columns: GridColDef[] = [
   {
     field: "id",
     headerName: "ID",
+    width: 150,
   },
   {
     field: "name",
     headerName: "Name",
+    width: 150,
   },
   {
     field: "nameAscii",
     headerName: "Name Ascii",
+    width: 150,
   },
   {
     field: "country",
     headerName: "Country",
+    width: 150,
   },
   {
     field: "countryIso3",
     headerName: "Country Code",
+    width: 150,
   },
   {
     field: "capital",
     headerName: "Capital",
+    width: 150,
   },
   {
     field: "population",
     headerName: "Population",
     type: "number",
+    width: 150,
   },
 ];
-
-const escapeRegExp = (value: string): string => {
-  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-};
 
 const SearchBox = ({ clearSearch, onChange, value }: SearchBoxProps) => {
   return (
@@ -68,11 +75,7 @@ const SearchBox = ({ clearSearch, onChange, value }: SearchBoxProps) => {
         backgroundColor: "#f4f4f3",
       }}
       InputProps={{
-        startAdornment: (
-          <Icon sx={{ marginX: 0.5, marginBottom: 0.5 }}>
-            <img alt="search" src={SearchIcon} />
-          </Icon>
-        ),
+        startAdornment: <CustomIcon alt="search" icon={SearchIcon} />,
         endAdornment: (
           <IconButton
             title="Clear"
@@ -100,13 +103,17 @@ const NoRows = () => {
   );
 };
 
+const UnsortedIcon = () => {
+  return <CustomIcon alt="sort" icon={SortIcon} />;
+};
+
 export const SortableTable = ({ cities, isLoading }: SortableTableProps) => {
   const [searchText, setSearchText] = useState("");
   const [rows, setRows] = useState<any[]>(cities);
 
   const handleSearch = (searchValue: string) => {
     setSearchText(searchValue);
-    const searchRegex = new RegExp(escapeRegExp(searchValue), "i");
+    const searchRegex = new RegExp(searchValue, "i");
     const filteredRows = cities.filter((row: any) => {
       return Object.keys(row).some((field: any) => {
         return searchRegex.test(row[field].toString());
@@ -122,8 +129,8 @@ export const SortableTable = ({ cities, isLoading }: SortableTableProps) => {
   return (
     <Box
       sx={{
-        height: 700,
-        width: 750,
+        height: 720,
+        width: "90%",
         margin: 1,
         padding: 1,
         alignSelf: "center",
@@ -136,7 +143,11 @@ export const SortableTable = ({ cities, isLoading }: SortableTableProps) => {
         aria-label="city table"
         columns={columns}
         rows={rows}
-        slots={{ toolbar: SearchBox, noRowsOverlay: NoRows }}
+        slots={{
+          toolbar: SearchBox,
+          noRowsOverlay: NoRows,
+          columnUnsortedIcon: UnsortedIcon,
+        }}
         initialState={{
           pagination: {
             paginationModel: { pageSize: 10 },
@@ -147,6 +158,13 @@ export const SortableTable = ({ cities, isLoading }: SortableTableProps) => {
           border: "none",
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: "#f4f4f3",
+          },
+          // TODO: remove the hover on the header
+          "&.MuiDataGrid-root .MuiDataGrid-row:hover": {
+            backgroundColor: "inherit",
+          },
+          "&.MuiDataGrid-root .Mui-hovered": {
+            backgroundColor: "inherit",
           },
         }}
         slotProps={{

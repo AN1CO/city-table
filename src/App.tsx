@@ -1,5 +1,4 @@
 import { useEffect, useCallback, useState } from "react";
-import type { ChangeEvent } from "react";
 import type { City } from "api/getCities";
 import { getCities } from "api/getCities";
 import { SortableTable } from "./components";
@@ -7,14 +6,13 @@ import { Box, Typography } from "@mui/material";
 import "./App.css";
 
 const App = () => {
-  const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
   const [error, setError] = useState<Error>();
 
-  const runSearch = useCallback(async (term: string) => {
+  const runSearch = useCallback(async () => {
     try {
-      const searchResult = await getCities({ searchTerm: term });
+      const searchResult = await getCities();
       setCities(searchResult);
       setIsLoading(false);
     } catch (err: any) {
@@ -23,8 +21,8 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    runSearch(searchTerm);
-  }, [runSearch, searchTerm]);
+    runSearch();
+  }, [runSearch]);
 
   return (
     <Box display="flex" flexDirection="column">
