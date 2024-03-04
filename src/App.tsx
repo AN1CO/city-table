@@ -1,8 +1,8 @@
-import { useEffect, useCallback, useState, useMemo } from "react";
+import { useEffect, useCallback, useState } from "react";
 import type { ChangeEvent } from "react";
 import type { City } from "api/getCities";
 import { getCities } from "api/getCities";
-import { Table } from "./components";
+import { SortableTable } from "./components";
 import { Box, Typography } from "@mui/material";
 import "./App.css";
 
@@ -24,11 +24,6 @@ const App = () => {
     runSearch(searchTerm);
   }, [runSearch, searchTerm]);
 
-  const onSearchTermChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.currentTarget.value);
-    event.preventDefault();
-  };
-
   return (
     <Box display="flex" flexDirection="column">
       <Typography
@@ -40,16 +35,7 @@ const App = () => {
       >
         City List
       </Typography>
-      <form>
-        <label htmlFor="search">Search</label>
-        <input
-          id="search"
-          name="search"
-          type="text"
-          onChange={() => onSearchTermChange}
-        />
-      </form>
-      <Table cities={cities} />
+      <SortableTable cities={cities} />
     </Box>
   );
 };
