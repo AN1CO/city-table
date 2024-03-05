@@ -147,6 +147,7 @@ const SearchBox = ({ clearSearch, onChange, value }: SearchBoxProps) => {
         alignSelf: "center",
         width: "60%",
         backgroundColor: "#f4f4f3",
+        borderRadius: 1,
       }}
       InputProps={{
         startAdornment: <CustomIcon alt="search" icon={Search} />,
