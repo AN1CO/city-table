@@ -210,7 +210,6 @@ export const SortableTable = ({ cities, isLoading }: SortableTableProps) => {
       <DataGrid
         disableRowSelectionOnClick
         loading={isLoading}
-        onProcessRowUpdateError={(error) => error.message}
         aria-label="city table"
         columns={columns}
         rows={rows}
@@ -245,9 +244,11 @@ export const SortableTable = ({ cities, isLoading }: SortableTableProps) => {
             backgroundColor: "inherit",
           },
 
-          "& .MuiTablePagination-displayedRows": {
-            display: "none",
-          },
+          // This is to hide how many rows total to match the table design,
+          // but I think more info is better
+          // "& .MuiTablePagination-displayedRows": {
+          //   display: "none",
+          // },
         }}
         slotProps={{
           toolbar: {
