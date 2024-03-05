@@ -8,7 +8,6 @@ import "./App.css";
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
-  // TODO: pass this error to error handling
   const [error, setError] = useState<Error>();
 
   const runSearch = useCallback(async () => {

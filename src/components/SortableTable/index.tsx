@@ -85,7 +85,7 @@ const DescendingIcon = () => {
   return <CustomIcon alt="descending" icon={ArrowDown} />;
 };
 
-const TablePaginationActions = ({
+const TablePaginationNavigation = ({
   count,
   page,
   rowsPerPage,
@@ -244,6 +244,11 @@ export const SortableTable = ({ cities, isLoading }: SortableTableProps) => {
             backgroundColor: "inherit",
           },
 
+          "& MuiTablePagination-toolbar": {
+            display: "flex",
+            flexDirection: "row",
+          },
+
           // This is to hide how many rows total to match the table design,
           // but I think more info is better
           // "& .MuiTablePagination-displayedRows": {
@@ -258,7 +263,8 @@ export const SortableTable = ({ cities, isLoading }: SortableTableProps) => {
             clearSearch: () => handleSearch(""),
           },
           pagination: {
-            ActionsComponent: TablePaginationActions,
+            ActionsComponent: TablePaginationNavigation,
+            labelRowsPerPage: "Per page",
           },
         }}
       />
