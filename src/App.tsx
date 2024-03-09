@@ -1,48 +1,43 @@
-import { useEffect, useCallback, useState, useMemo } from 'react';
-import type { ChangeEvent } from 'react';
-import type { City } from 'api/getCities';
-import { getCities } from 'api/getCities';
-import './App.css';
+import { useEffect, useCallback, useState } from "react";
+import type { City } from "api/getCities";
+import { getCities } from "api/getCities";
+import { SortableTable } from "./components";
+import { Box, Typography } from "@mui/material";
+import "./App.css";
 
 const App = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [cities, setCities] = useState<City[]>([]);
   const [error, setError] = useState<Error>();
 
-  const cityRows = useMemo(() =>
-    cities.map(s => <pre key={s.id}>{JSON.stringify(s)}</pre>),
-  [cities]);
-
-  const runSearch = useCallback(async (term: string) => {
-    try
-    {
-      const searchResult = await getCities({ searchTerm: term });
+  const runSearch = useCallback(async () => {
+    try {
+      const searchResult = await getCities();
       setCities(searchResult);
+      setIsLoading(false);
     } catch (err: any) {
       setError(err);
     }
   }, []);
 
   useEffect(() => {
-    runSearch(searchTerm);
-  }, [runSearch, searchTerm]);
-
-  const onSearchTermChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.currentTarget.value);
-    event.preventDefault();
-  };
+    runSearch();
+  }, [runSearch]);
 
   return (
-    <div className="App">
-      <header className="App-header"></header>
-      <h1>City List</h1>
-      <form>
-        <label htmlFor="search">Search</label>
-        <input id="search" name="search" type="text" onChange={() => onSearchTermChange}/>
-      </form>
-      {error ? <pre>{`Eek! ${error.message}`}</pre> : cityRows}
-    </div>
+    <Box display="flex" flexDirection="column">
+      <Typography
+        gutterBottom
+        component="h1"
+        variant="h2"
+        align="center"
+        marginTop={1}
+      >
+        City List
+      </Typography>
+      <SortableTable cities={cities} isLoading={isLoading} />
+    </Box>
   );
- };
+};
 
 export default App;
