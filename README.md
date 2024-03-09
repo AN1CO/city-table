@@ -28,10 +28,6 @@ You will also see any lint errors in the console.
 Launches the test runner in the interactive watch mode.
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-# Product requirements :books:
-
-**Note:** These product requirements are created in loosely the same style you would see internally at Gusto, but the problem statement and goals were made up for this exercise.
-
 ## User-focused Requirements
 
 ### Search
